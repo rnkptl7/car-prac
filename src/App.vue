@@ -1,6 +1,6 @@
 <template>
   <Navbar></Navbar>
-  <Card :cars="cars" :getPrice="getPrice"></Card>
+  <Card :cars="cars" @get-price="getPrice"></Card>
 </template>
 
 <script>
