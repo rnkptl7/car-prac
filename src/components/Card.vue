@@ -13,9 +13,16 @@
           }}
         </p>
       </div>
-      <button class="card-button" v-on:click="getPrice(car.price, car.name)">
-        More info
-      </button>
+      <div>
+        <button
+          v-if="car.price"
+          class="card-button"
+          v-on:click="getPrice(car.price, car.name)"
+        >
+          More info
+        </button>
+        <button disabled v-else class="card-button">Available Soon</button>
+      </div>
     </div>
   </div>
 </template>
@@ -26,7 +33,12 @@ export default {
     cars: {
       type: Object,
     },
-    getPrice: Function,
+  },
+  emits: ["get-price"],
+  methods: {
+    getPrice(carPrice, carName) {
+      this.$emit("get-price", carPrice, carName);
+    },
   },
 };
 </script>
@@ -109,6 +121,16 @@ export default {
 .card:hover .card-button {
   transform: translate(-50%, 50%);
   opacity: 1;
+}
+
+button:disabled {
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}
+
+button:disabled:hover {
+  cursor: not-allowed;
 }
 
 @media only screen and (min-width: 630px) and (max-width: 1300px) {
