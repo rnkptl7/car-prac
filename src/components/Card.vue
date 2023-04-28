@@ -8,20 +8,35 @@
         <p class="text-title">{{ car.name }}</p>
         <p class="text-body">
           {{
-            car.description.slice(0, 80) +
-            (car.description.length > 80 ? "..." : "")
+            car.description.slice(0, 70) +
+            (car.description.length > 70 ? "..." : "")
           }}
         </p>
       </div>
       <div>
-        <button
-          v-if="car.price"
-          class="card-button"
-          v-on:click="getPrice(car.price, car.name)"
-        >
-          More info
-        </button>
-        <button disabled v-else class="card-button">Available Soon</button>
+        <div>
+          <button
+            v-if="car.price"
+            class="card-button"
+            v-on:click="getPrice(car.price, car.name)"
+          >
+            More info
+          </button>
+          <button disabled v-else class="card-button">Available Soon</button>
+        </div>
+        <div class="editDeleteBtn">
+          <img
+            class="editImage"
+            src="/images/edit.png"
+            alt="edit button"
+            @click="editItem(car)"
+          />
+          <img
+            src="/images/delete.png"
+            alt="delete button"
+            @click="deleteItem(car.name)"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -34,10 +49,16 @@ export default {
       type: Object,
     },
   },
-  emits: ["get-price"],
+  emits: ["get-price", "edit-item"],
   methods: {
     getPrice(carPrice, carName) {
       this.$emit("get-price", carPrice, carName);
+    },
+    deleteItem(carName) {
+      alert(`Delete ${carName}`);
+    },
+    editItem(value) {
+      this.$emit("edit-item", value);
     },
   },
 };
@@ -53,7 +74,7 @@ export default {
 .card {
   margin: 10px 5px;
   width: 200px;
-  height: 254px;
+  height: 280px;
   border-radius: 20px;
   background: #334756;
   position: relative;
@@ -73,6 +94,22 @@ export default {
     object-fit: contain;
   }
 }
+.editDeleteBtn {
+  position: absolute;
+  right: 10px;
+  bottom: 13px;
+  display: flex;
+
+  img {
+    width: 20px;
+    opacity: 0.8;
+    padding: 5px;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
 
 .card-details {
   color: #fff;
@@ -82,22 +119,21 @@ export default {
 }
 
 .card-button {
-  transform: translate(-50%, 125%);
-  width: 60%;
+  width: 50%;
   border-radius: 1rem;
   border: none;
   background-color: #334756;
   color: #fff;
-  font-size: 1rem;
-  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  padding: 0.4rem 0.5rem;
   position: absolute;
-  left: 50%;
-  bottom: 0;
-  opacity: 0;
+  left: 7%;
+  bottom: 10px;
   transition: 0.3s ease-out;
   cursor: pointer;
   box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.25);
   border: 2px solid #395b64;
+  opacity: 1;
 }
 
 .text-body {
@@ -116,11 +152,6 @@ export default {
 .card:hover {
   border-color: rgb(255 255 255 / 73%);
   box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.25);
-}
-
-.card:hover .card-button {
-  transform: translate(-50%, 50%);
-  opacity: 1;
 }
 
 button:disabled {

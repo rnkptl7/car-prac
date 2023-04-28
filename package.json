@@ -8,9 +8,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vee-validate/rules": "^4.8.6",
     "postcss-sassy-mixins": "^2.1.0",
     "sass": "^1.62.0",
     "sweetalert2": "^11.7.3",
+    "vee-validate": "^4.8.6",
     "vue": "^3.2.47"
   },
   "devDependencies": {
