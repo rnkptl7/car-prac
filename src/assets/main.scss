@@ -1,8 +1,75 @@
 *{
   margin: 0;
   padding: 0;
+  scroll-behavior: smooth;
 }
 
 body{
   background: #082032;
+  position: relative;
+}
+
+.btn{
+  margin: 0 2px;
+  border-radius: 1rem;
+    border: none;
+    background-color: #334756;
+    color: #fff;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    transition: 0.3s ease-out;
+    cursor: pointer;
+    box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.25);
+    border: 2px solid #395b64;
+}
+
+.btn:hover {
+  border-color: rgb(255 255 255 / 60%);
+}
+
+// Modal
+.error{
+  color: #ff6d6d;
+}
+.heading {
+  margin-bottom: 10px;
+}
+
+.inputDiv {
+  margin: 20px 0;
+
+  label {
+    font-size: 18px;
+  }
+  input,
+  textarea {
+    color: #ffffffe8;
+    display: block;
+    width: 93%;
+    margin: 3px 0;
+    padding: 8px;
+    font-size: 16px;
+    outline: none;
+    border: 2px solid rgba($color: #395b64, $alpha: 1);
+    border-radius: 4px;
+    background: transparent;
+  }
+
+  ::placeholder {
+    color: #ffffffa1;
+  }
+}
+
+.alertData {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  p{
+    margin: 10px 0;
+
+    .alertDetail{
+      text-align: left;
+    }
+  }
 }

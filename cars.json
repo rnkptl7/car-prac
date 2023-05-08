@@ -29,21 +29,21 @@
     "image": "https://i.pinimg.com/originals/52/ac/01/52ac0169c1ead77f6e33180d129900af.png"
   },
   {
-    "name": "Kia Seltos",
-    "price": "₹9.95 - ₹17.65 Lakh",
-    "description": "The Kia Seltos is a stylish and spacious SUV with a range of advanced features. It comes with a choice of petrol and diesel engines, and offers excellent performance on both city and highway roads.",
-    "image": "https://www.pngarts.com/files/6/Kia-Seltos-Transparent-Background-PNG.png"
+    "name": "Jeep Wrangler",
+    "price": "₹59.05 - ₹63.05 Lakh",
+    "description": "Jeep Wrangler is a 5 seater SUV available in a price range of Rs. 59.05 - 63.05 Lakh*. It is available in 2 variants, a 1998 cc, BS6 and a single Automatic.",
+    "image": "https://s3.us-east-2.amazonaws.com/dealer-inspire-vps-vehicle-images/stock-images/thumbnails/large/chrome/c141ee99f0fbe99a91f673cdce6fcd23.png"
   },
   {
-    "name": "Maruti Suzuki Swift",
-    "description": "The Maruti Suzuki Swift is a popular hatchback known for its sporty looks and excellent performance. It comes with a 1.2L petrol engine and offers great fuel efficiency, making it a top choice for city driving.",
-    "image": "https://marutisuzukiarenaprodcdn.azureedge.net/-/media/images/maruti/marutisuzuki/car/car-profile-shots/swift-launch-2021/fireredmidnightblack.webp"
+    "name": "Mercedes Benz G-Class G550",
+    "description": "Mercedes-Benz G-Class is a 5 seater SUV available in a price range of Rs. 1.72 - 2.55 Crore. It is available in 2 variants, 2925 to 3982 cc engine options.",
+    "image": "https://d2ivfcfbdvj3sm.cloudfront.net/7fc965ab77efe6e0fa62e4ca1ea7673bb25e4851091e3d8e88cb10/stills_0640_png/MY2021/14902/14902_st0640_116.png"
   },
   {
-    "name": "Honda City",
-    "price": "₹11.04 - ₹15.19 Lakh",
-    "description": "The Honda City is a premium sedan with a sleek and modern design. It comes with a range of advanced features including a touchscreen infotainment system, automatic climate control, and a sunroof.",
-    "image": "https://www.pngmart.com/files/22/Honda-City-PNG-Transparent.png"
+    "name": "Tata Safari",
+    "price": "₹15.04 - ₹25.19 Lakh",
+    "description": "With the All-New Tata Safari, no matter where it's taken, the refined ride & handling and a thrilling drive powers the journey. With the 170 PS Kryotec Engine",
+    "image": "https://malikcars.com/wp-content/uploads/2021/08/safari-tropical-mist-adventure-blk-desktop_480-x-275.png"
   },
   {
     "name": "Toyota Fortuner",
@@ -52,9 +52,9 @@
     "image": "https://www.freepnglogos.com/uploads/fortuner-png/fortuner-gxl-automatic-melville-toyota-2.png"
   },
   {
-    "name": "Maruti Suzuki Alto",
-    "price": "₹3.04 - ₹4.41 Lakh",
-    "description": "The Maruti Suzuki Alto is a budget-friendly hatchback with a simple yet functional design. It comes with a choice of petrol engines and offers great fuel efficiency, making it a top choice for first-time car buyers.",
-    "image": "https://marutisuzukiarenaprodcdn.azureedge.net/-/media/images/maruti/marutisuzuki/car/car-profile-shots/alto-800/alto800_blazing_red/alto800_blazing_red_new.ashx"
+    "name": "Mahindra Scorpio Classic",
+    "price": "₹13.04 - ₹16.41 Lakh",
+    "description": "Introducing new Mahindra Scorpio Classic with a new imposing look at the front, an all-new powerful mHAWK engine, premium interiors.",
+    "image": "https://prog-ace-cdn.azureedge.net/-/media/project/mahindra/dotcom/mahindra/dark-theme-mahindra-images/hello-w153/w153-840x560.png?rev=efa10bc446274ec9823e253898097500"
   }
 ]
