@@ -9,6 +9,8 @@
   },
   "dependencies": {
     "@vee-validate/rules": "^4.8.6",
+    "axios": "^1.4.0",
+    "epic-spinners": "^2.0.0",
     "postcss-sassy-mixins": "^2.1.0",
     "sass": "^1.62.0",
     "sweetalert2": "^11.7.3",
