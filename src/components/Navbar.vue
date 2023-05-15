@@ -4,24 +4,85 @@
       <img class="logo" src="/images/logo.png" alt="apnicar logo" />
       <p>apniCar</p>
     </div>
-    <div class="navbar-right">
-      <button class="btn" @click="isOpenModal(true)">Add Car</button>
+    <div class="navbar-right" v-if="!mobileView">
+      <router-link to="/">Home</router-link>
+      <router-link to="/login">Login</router-link>
+      <router-link to="/register">Register</router-link>
     </div>
+    <div v-else>
+      <img
+        v-if="!store.showNav"
+        class="hamburgerMenu"
+        src="/images/hamburger-menu.png"
+        alt="hamburger-menu"
+        @click="store.showNav = !store.showNav"
+      />
+      <img
+        v-else
+        class="hamburgerMenu"
+        src="/images/close.png"
+        alt="close-menu"
+        @click="store.showNav = !store.showNav"
+      />
+    </div>
+  </div>
+  <div
+    v-if="mobileView"
+    class="navigation-menu"
+    :class="{ open: store.showNav }"
+  >
+    <NavigationMobile />
   </div>
 </template>
 
 <script>
+import NavigationMobile from "@/components/NavigationMobile.vue";
+import { store } from "../store";
+
 export default {
-  emits: ["open-modal"],
+  components: {
+    NavigationMobile,
+  },
+  data() {
+    return {
+      mobileView: true,
+      // showNav: store.showNav,
+      store,
+    };
+  },
   methods: {
-    isOpenModal(val) {
-      this.$emit("open-modal", val);
+    handleView() {
+      this.mobileView = window.innerWidth <= 990;
     },
+    closeMobileMenu() {
+      store.showNav = false;
+    },
+  },
+  created() {
+    this.handleView();
+    window.addEventListener("resize", this.handleView);
+    window.addEventListener("scroll", this.closeMobileMenu);
   },
 };
 </script>
 
 <style scoped lang="scss">
+.navigation-menu {
+  position: absolute;
+  transform: translatex(-30rem);
+  z-index: 1;
+  background: #334756;
+  width: 50%;
+  height: 100vh;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+.open {
+  transition: 800ms transform;
+  transform: translateX(0);
+}
+.hamburgerMenu {
+  width: 2rem;
+}
 .navbar {
   background: #334756;
   height: 80px;
@@ -46,6 +107,20 @@ export default {
       font-weight: 900;
       font-style: italic;
       margin-left: 10px;
+    }
+  }
+
+  .navbar-right {
+    a {
+      padding: 0.8rem;
+      display: inline-block;
+      text-decoration: none;
+      color: #fff;
+      font-size: 18px;
+    }
+
+    .router-link-exact-active {
+      font-weight: 600;
     }
   }
 }
