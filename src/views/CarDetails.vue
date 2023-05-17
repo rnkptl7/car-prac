@@ -107,7 +107,7 @@ export default {
   async created() {
     this.initData();
 
-    this.$watch(() => this.$route.params, this.initData);
+    this.$watch(() => this.$route.params.id, this.initData);
   },
 };
 </script>

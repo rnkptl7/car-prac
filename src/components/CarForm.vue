@@ -1,20 +1,18 @@
 <template>
-  <transition>
-    <div class="modal">
-      <vee-form class="form" :validation-schema="schema">
-        <div class="heading">
-          <slot name="heading"></slot>
-        </div>
-        <div class="fields">
-          <slot name="fields"></slot>
-        </div>
-        <div class="buttons block">
-          <slot name="buttons"></slot>
-        </div>
-        <slot></slot>
-      </vee-form>
-    </div>
-  </transition>
+  <div class="modal">
+    <vee-form class="form" :validation-schema="schema">
+      <div class="heading">
+        <slot name="heading"></slot>
+      </div>
+      <div class="fields">
+        <slot name="fields"></slot>
+      </div>
+      <div class="buttons block">
+        <slot name="buttons"></slot>
+      </div>
+      <slot></slot>
+    </vee-form>
+  </div>
 </template>
 
 <script>

@@ -1,13 +1,26 @@
 <template>
-  <div v-if="store.loading" class="loader">
+  <div v-show="store.loading" class="loader">
     <Loading />
   </div>
-  <div v-else>
-    <div v-if="store.isError" class="errorDiv">
+  <div v-show="!store.loading">
+    <div v-show="store.isError" class="errorDiv">
       <Error />
     </div>
-    <div v-else class="card-container">
-      <div class="card" v-for="car in cars">
+    <TransitionGroup
+      tag="div"
+      @before-enter="beforeEnter"
+      @enter="enter"
+      name="card"
+      appear
+      v-show="!store.isError"
+      class="card-container"
+    >
+      <div
+        class="card"
+        v-for="(car, index) in cars"
+        :key="car.id"
+        :data-index="index"
+      >
         <div class="card-image">
           <img :src="car.image" alt="" />
         </div>
@@ -47,72 +60,79 @@
           </div>
         </div>
       </div>
-    </div>
+    </TransitionGroup>
 
     <Teleport to="body">
-      <CarForm v-if="openModal">
-        <template v-slot:heading class="heading">
-          <h1 class="heading" v-if="!editModal">Add Car</h1>
-          <h1 class="heading" v-else>Edit Car</h1>
-        </template>
-        <template v-slot:fields class="fields">
-          <div class="inputDiv">
-            <label>Name:</label>
-            <vee-field
-              name="name"
-              type="text"
-              v-model="form.name"
-              placeholder="Name"
-            />
-            <ErrorMessage name="name" class="error" />
-          </div>
-          <div class="inputDiv">
-            <label>Details:</label>
-            <vee-field
-              as="textarea"
-              name="details"
-              v-model="form.details"
-              type="text"
-              placeholder="Car Details"
-            ></vee-field>
-            <ErrorMessage name="details" class="error" />
-          </div>
-          <div class="inputDiv">
-            <label>Image:</label>
-            <vee-field
-              name="url"
-              v-model="form.image"
-              type="text"
-              placeholder="Enter Image Url"
-            />
-            <ErrorMessage name="url" class="error" />
-          </div>
-          <div class="inputDiv">
-            <label>Price:</label>
-            <vee-field
-              name="price"
-              v-model="form.price"
-              type="number"
-              placeholder="Enter Price"
-            />
-            <ErrorMessage name="price" class="error" />
-          </div>
-        </template>
-        <template v-slot:buttons class="buttons">
-          <button
-            v-if="editModal"
-            type="submit"
-            @click.prevent="updateData"
-            class="btn"
-          >
-            Update
-          </button>
-          <button v-else type="submit" class="btn" @click.prevent="submitForm">
-            Submit
-          </button>
-          <button class="btn" @click="closeModal">Cancel</button>
-        </template>
-      </CarForm>
+      <transition name="modal">
+        <CarForm v-if="openModal">
+          <template v-slot:heading class="heading">
+            <h1 class="heading" v-if="!editModal">Add Car</h1>
+            <h1 class="heading" v-else>Edit Car</h1>
+          </template>
+          <template v-slot:fields class="fields">
+            <div class="inputDiv">
+              <label>Name:</label>
+              <vee-field
+                name="name"
+                type="text"
+                v-model="form.name"
+                placeholder="Name"
+              />
+              <ErrorMessage name="name" class="error" />
+            </div>
+            <div class="inputDiv">
+              <label>Details:</label>
+              <vee-field
+                as="textarea"
+                name="details"
+                v-model="form.details"
+                type="text"
+                placeholder="Car Details"
+              ></vee-field>
+              <ErrorMessage name="details" class="error" />
+            </div>
+            <div class="inputDiv">
+              <label>Image:</label>
+              <vee-field
+                name="url"
+                v-model="form.image"
+                type="text"
+                placeholder="Enter Image Url"
+              />
+              <ErrorMessage name="url" class="error" />
+            </div>
+            <div class="inputDiv">
+              <label>Price:</label>
+              <vee-field
+                name="price"
+                v-model="form.price"
+                type="number"
+                placeholder="Enter Price"
+              />
+              <ErrorMessage name="price" class="error" />
+            </div>
+          </template>
+          <template v-slot:buttons class="buttons">
+            <button
+              v-if="editModal"
+              type="submit"
+              @click.prevent="updateData"
+              class="btn"
+            >
+              Update
+            </button>
+            <button
+              v-else
+              type="submit"
+              class="btn"
+              @click.prevent="submitForm"
+            >
+              Submit
+            </button>
+            <button class="btn" @click="closeModal">Cancel</button>
+          </template>
+        </CarForm>
+      </transition>
     </Teleport>
   </div>
 </template>
@@ -122,6 +142,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { ErrorMessage } from "vee-validate";
 import "sweetalert2/src/sweetalert2.scss";
+import gsap from "gsap";
 // import { ScalingSquaresSpinner } from "epic-spinners";
 
 import CarForm from "./CarForm.vue";
@@ -131,7 +152,7 @@ import { store } from "../store";
 
 export default {
   props: {
-    openModal: Function,
+    openModal: Boolean,
     editModal: Boolean,
   },
   components: {
@@ -154,7 +175,7 @@ export default {
     };
   },
   emits: ["edit-item", "close-modal"],
-  created() {
+  mounted() {
     this.getData();
     // store.getData();
   },
@@ -296,6 +317,7 @@ export default {
               confirmButtonColor: "#082032",
             });
 
+            this.closeModal();
             this.getData();
           }
         } catch (error) {
@@ -314,13 +336,62 @@ export default {
 
         this.cars = response.data.data;
         store.loading = false;
+        store.isError = false;
       } catch (error) {
-        // alert(error);
         store.loading = false;
         store.isError = true;
         store.error = error.response.status + " " + error.response.statusText;
       }
     },
+    beforeEnter(el) {
+      el.style.opacity = 0;
+      el.style.transform = "translateY(100px)";
+    },
+
+    enter(el, done) {
+      gsap.to(el, {
+        opacity: 1,
+        y: 0,
+        duration: 0.1,
+        onComplete: done,
+        delay: el.dataset.index * 0.1,
+      });
+    },
   },
 };
 </script>
+
+<style scoped>
+.card-leave-active {
+  transition: all 0.8s ease;
+  animation: move 0.8s ease-out;
+}
+.card-leave-to {
+  opacity: 0;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+  transform: translateY(-100px);
+}
+
+.modal-enter-active,
+.modal-leave-active {
+  transition: all 0.2s ease-in;
+}
+
+@keyframes move {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+}
+</style>
