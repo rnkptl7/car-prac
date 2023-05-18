@@ -1,24 +1,26 @@
 <template>
   <div class="navbar">
-    <div class="navbar-logo">
-      <img class="logo" src="/images/logo.png" alt="apnicar logo" />
-      <p>apniCar</p>
-    </div>
-    <div class="navbar-right" v-if="!mobileView">
+    <router-link to="/">
+      <div class="navbar-logo">
+        <img class="logo" src="/images/logo.png" alt="apnicar logo" />
+        <p>apniCar</p>
+      </div>
+    </router-link>
+    <div class="navbar-right" v-show="!mobileView">
       <router-link to="/">Home</router-link>
       <router-link to="/login">Login</router-link>
       <router-link to="/register">Register</router-link>
     </div>
-    <div v-else>
+    <div v-show="mobileView">
       <img
-        v-if="!store.showNav"
+        v-show="!store.showNav"
         class="hamburgerMenu"
         src="/images/hamburger-menu.png"
         alt="hamburger-menu"
         @click="store.showNav = !store.showNav"
       />
       <img
-        v-else
+        v-show="store.showNav"
         class="hamburgerMenu"
         src="/images/close.png"
         alt="close-menu"
@@ -27,7 +29,7 @@
     </div>
   </div>
   <div
-    v-if="mobileView"
+    v-show="mobileView"
     class="navigation-menu"
     :class="{ open: store.showNav }"
   >
@@ -67,6 +69,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.navbar a {
+  color: #fff;
+  text-decoration: none;
+}
 .navigation-menu {
   position: absolute;
   transform: translatex(-30rem);
@@ -82,6 +88,7 @@ export default {
 }
 .hamburgerMenu {
   width: 2rem;
+  cursor: pointer;
 }
 .navbar {
   background: #334756;
@@ -124,7 +131,6 @@ export default {
     }
   }
 }
-
 @media (max-width: 1098px) {
   .navbar {
     padding: 0 100px;

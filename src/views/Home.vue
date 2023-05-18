@@ -1,13 +1,15 @@
 <template>
-  <div class="menubar">
-    <button class="btn" @click="isOpenModal(true)">Add Car</button>
+  <div>
+    <div class="menubar">
+      <button class="btn" @click="isOpenModal(true)">Add Car</button>
+    </div>
+    <GalleryCard
+      @edit-item="editButton"
+      @close-modal="closeModal"
+      :openModal="openModal"
+      :editModal="editModal"
+    ></GalleryCard>
   </div>
-  <GalleryCard
-    @edit-item="editButton"
-    @close-modal="closeModal"
-    :openModal="openModal"
-    :editModal="editModal"
-  ></GalleryCard>
 </template>
 
 <script>
