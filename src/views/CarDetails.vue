@@ -1,7 +1,7 @@
 <template>
-  <div v-if="store.loading" class="loader"><Loading /></div>
+  <div v-if="loading" class="loader"><Loading /></div>
   <div v-else class="carCard">
-    <div v-if="store.isError" class="errorDiv">
+    <div v-if="isError" class="errorDiv">
       <Error />
     </div>
     <div v-else class="navigationBar">
@@ -10,24 +10,24 @@
         <p>Back</p>
       </div>
     </div>
-    <div v-if="!store.isError" class="carDetails">
+    <div v-if="!isError" class="carDetails" v-for="car in car">
       <div class="carImage">
-        <img :src="car?.image" alt="" srcset="" />
+        <img :src="car?.image" :alt="car?.id" srcset="" />
       </div>
       <div class="carDesc">
         <div>
-          <h1>{{ car.name }}</h1>
-          <p class="details">{{ car.details }}</p>
+          <h1>{{ car?.name }}</h1>
+          <p class="details">{{ car?.details }}</p>
         </div>
         <div class="carInfo">
           <button class="btn">Buy Now</button>
-          <p>₹{{ car.price }}</p>
+          <p>₹{{ car?.price }}</p>
         </div>
       </div>
     </div>
 
     <div class="card-container">
-      <div class="card cardHeight" v-for="car in carsData">
+      <div class="card cardHeight" v-for="car in moreCarsData">
         <div class="card-image">
           <img :src="car.image" alt="" />
         </div>
@@ -53,59 +53,51 @@
 </template>
 
 <script>
-import { store } from "../store";
+import { useCarStore } from "../stores/CarStore";
 
-import axios from "axios";
 import Loading from "../components/Loading.vue";
 import Error from "../components/Error.vue";
+import { mapActions, mapState, mapWritableState } from "pinia";
 
 export default {
   components: {
     Loading,
     Error,
   },
-  data() {
-    return {
-      car: "",
-      carsData: "",
-      store,
-    };
+  computed: {
+    ...mapState(useCarStore, ["getCarById", "moreCars"]),
+    ...mapWritableState(useCarStore, [
+      "loading",
+      "isError",
+      "error",
+      "carsData",
+      "car",
+      "moreCarsData",
+    ]),
   },
   methods: {
+    ...mapActions(useCarStore, ["getCarData", "getData"]),
     async initData() {
       try {
-        store.loading = true;
-        const response = await axios.get(
-          `https://testapi.io/api/dartya/resource/cardata/${this.$route.params.id}`
-        );
-        if (response.status === 200) {
-          console.log(response);
-          this.car = response.data;
-        }
+        this.loading = true;
+        this.isError = false;
 
-        const data = await axios.get(
-          `https://testapi.io/api/dartya/resource/cardata/`
-        );
-        if (data.status === 200) {
-          let response = data.data.data;
-          let carsFilter = response.filter(
-            (response) => response.id != this.$route.params.id
-          );
+        this.getCarById(this.$route.params.id);
 
-          this.carsData = carsFilter.slice(0, 3);
-        }
-        store.loading = false;
+        this.moreCars(this.$route.params.id);
+
+        this.loading = false;
       } catch (error) {
-        store.loading = false;
-        store.isError = true;
-        store.error = error.response.status + " " + error.response.statusText;
+        this.loading = false;
+        this.isError = true;
         console.log(error);
-        // alert(error);
+        this.error = error.response.status + " " + error.response.statusText;
       }
     },
   },
   async created() {
-    this.initData();
+    await this.getData();
+    await this.initData();
 
     this.$watch(() => this.$route.params.id, this.initData);
   },

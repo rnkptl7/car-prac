@@ -1,17 +1,16 @@
 <template>
   <div>
     <img src="/images/error_icon.png" alt="" />
-    <p>{{ store.error }}</p>
+    <p>{{ error }}</p>
   </div>
 </template>
 
 <script>
-import { store } from "../store";
+import { mapState } from "pinia";
+import { useCarStore } from "../stores/CarStore";
 export default {
-  data() {
-    return {
-      store,
-    };
+  computed: {
+    ...mapState(useCarStore, ["error"]),
   },
 };
 </script>

@@ -36,6 +36,8 @@
 <script>
 import axios from "axios";
 import { ErrorMessage } from "vee-validate";
+import { useCarStore } from "../stores/CarStore";
+import { mapActions } from "pinia";
 
 export default {
   components: {
@@ -55,12 +57,10 @@ export default {
     };
   },
   methods: {
+    ...mapActions(useCarStore, ["loginUser"]),
     async submitForm() {
       try {
-        const response = await axios.post(
-          "https://testapi.io/api/dartya//login",
-          this.form
-        );
+        const response = await this.loginUser(this.form);
 
         if (response.status === 200) {
           this.$toast.success("Login successfully", {

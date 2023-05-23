@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import { store } from "../store";
+import { useCarStore } from "../stores/CarStore";
 
 const routes = [
   {
@@ -31,6 +31,7 @@ const router = createRouter({
 });
 
 router.beforeEach(() => {
+  const store = useCarStore();
   store.showNav = false;
 });
 

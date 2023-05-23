@@ -104,6 +104,8 @@
 <script>
 import axios from "axios";
 import { ErrorMessage } from "vee-validate";
+import { useCarStore } from "../stores/CarStore";
+import { mapActions } from "pinia";
 
 export default {
   components: {
@@ -134,6 +136,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(useCarStore, ["addUser"]),
     addAge(e) {
       let date = new Date(e.target.value);
       let month_diff = Date.now() - date.getTime();
@@ -145,10 +148,7 @@ export default {
     },
     async registerData() {
       try {
-        let response = await axios.post(
-          "https://testapi.io/api/dartya/resource/users",
-          this.form
-        );
+        let response = await this.addUser(this.form);
 
         if (response.status === 201) {
           this.$toast.success("Your Registration completed successfully", {
