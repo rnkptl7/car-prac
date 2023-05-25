@@ -13,52 +13,40 @@
     </div>
     <div v-show="mobileView">
       <img
-        v-show="!store.showNav"
+        v-show="!showNav"
         class="hamburgerMenu"
         src="/images/hamburger-menu.png"
         alt="hamburger-menu"
-        @click="store.showNav = !store.showNav"
+        @click="showNav = !showNav"
       />
       <img
-        v-show="store.showNav"
+        v-show="showNav"
         class="hamburgerMenu"
         src="/images/close.png"
         alt="close-menu"
-        @click="store.showNav = !store.showNav"
+        @click="showNav = !showNav"
       />
     </div>
   </div>
-  <div
-    v-show="mobileView"
-    class="navigation-menu"
-    :class="{ open: store.showNav }"
-  >
+  <div v-show="mobileView" class="navigation-menu" :class="{ open: showNav }">
     <NavigationMobile />
   </div>
 </template>
 
 <script>
 import NavigationMobile from "@/components/NavigationMobile.vue";
-import { store } from "../store";
+import { useCarStore } from "../stores/CarStore";
+import { mapActions, mapWritableState } from "pinia";
 
 export default {
   components: {
     NavigationMobile,
   },
-  data() {
-    return {
-      mobileView: true,
-      // showNav: store.showNav,
-      store,
-    };
+  computed: {
+    ...mapWritableState(useCarStore, ["mobileView", "showNav"]),
   },
   methods: {
-    handleView() {
-      this.mobileView = window.innerWidth <= 990;
-    },
-    closeMobileMenu() {
-      store.showNav = false;
-    },
+    ...mapActions(useCarStore, ["handleView", "closeMobileMenu"]),
   },
   created() {
     this.handleView();

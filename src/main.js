@@ -1,5 +1,6 @@
 import { createApp } from "vue";
 import App from "./App.vue";
+import { createPinia } from "pinia";
 import VeeValidatePlugin from "./includes/validation";
 import router from "./router";
 
@@ -10,6 +11,7 @@ import "./assets/main.scss";
 
 const app = createApp(App);
 app.use(router);
+app.use(createPinia());
 app.use(VeeValidatePlugin);
 app.use(ToastPlugin);
 app.mount("#app");

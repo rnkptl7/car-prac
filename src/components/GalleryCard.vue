@@ -1,9 +1,9 @@
 <template>
-  <div v-show="store.loading" class="loader">
+  <div v-show="loading" class="loader">
     <Loading />
   </div>
-  <div v-show="!store.loading">
-    <div v-show="store.isError" class="errorDiv">
+  <div v-show="!loading">
+    <div v-show="isError" class="errorDiv">
       <Error />
     </div>
     <TransitionGroup
@@ -12,12 +12,12 @@
       @enter="enter"
       name="card"
       appear
-      v-show="!store.isError"
+      v-show="!isError"
       class="card-container"
     >
       <div
         class="card"
-        v-for="(car, index) in cars"
+        v-for="(car, index) in carsData"
         :key="car.id"
         :data-index="index"
       >
@@ -129,7 +129,9 @@
             >
               Submit
             </button>
-            <button class="btn" @click="closeModal">Cancel</button>
+            <button class="btn" type="reset" @click="closeModalForm">
+              Cancel
+            </button>
           </template>
         </CarForm>
       </transition>
@@ -138,28 +140,22 @@
 </template>
 
 <script>
-import axios from "axios";
 import Swal from "sweetalert2";
 import { ErrorMessage } from "vee-validate";
 import "sweetalert2/src/sweetalert2.scss";
 import gsap from "gsap";
-// import { ScalingSquaresSpinner } from "epic-spinners";
 
 import CarForm from "./CarForm.vue";
 import Loading from "./Loading.vue";
 import Error from "./Error.vue";
-import { store } from "../store";
+import { useCarStore } from "../stores/CarStore";
+import { mapActions, mapState, mapWritableState } from "pinia";
 
 export default {
-  props: {
-    openModal: Boolean,
-    editModal: Boolean,
-  },
   components: {
     CarForm,
     Loading,
     Error,
-    // ScalingSquaresSpinner,
   },
   data() {
     return {
@@ -169,17 +165,32 @@ export default {
         image: "",
         price: "",
       },
-      cars: "",
       editCarId: "",
-      store,
     };
   },
   emits: ["edit-item", "close-modal"],
   mounted() {
+    // this.getData();
     this.getData();
-    // store.getData();
+  },
+  computed: {
+    ...mapWritableState(useCarStore, [
+      "carsData",
+      "loading",
+      "isError",
+      "error",
+      "openModal",
+      "editModal",
+    ]),
+    ...mapState(useCarStore, ["closeModal", "editButton"]),
   },
   methods: {
+    ...mapActions(useCarStore, [
+      "getData",
+      "updateCarData",
+      "deleteCarData",
+      "addCarData",
+    ]),
     getPrice(carPrice, carName) {
       Swal.fire({
         title: "Price of " + carName,
@@ -215,8 +226,7 @@ export default {
           })
           .then((result) => {
             if (result.isConfirmed) {
-              axios
-                .delete(`https://testapi.io/api/dartya/resource/cardata/${id}`)
+              this.deleteCarData(id)
                 .then((res) => {
                   console.log(res);
                   swalWithBootstrapButtons.fire(
@@ -227,20 +237,22 @@ export default {
 
                   this.getData();
                 })
-                .catch((err) => {
-                  alert(err.response.data);
-                  this.getData();
+                .catch((error) => {
+                  this.loading = false;
+                  this.isError = true;
+                  this.error =
+                    error.response.status + " " + error.response.statusText;
                 });
             }
           });
       } catch (error) {
-        store.loading = false;
-        store.isError = true;
-        store.error = error.response.status + " " + error.response.statusText;
+        this.loading = false;
+        this.isError = true;
+        this.error = error.response.status + " " + error.response.statusText;
       }
     },
     editItem(value) {
-      this.$emit("edit-item");
+      this.editButton();
       window.scrollTo(0, 0);
 
       this.editCarId = value.id;
@@ -260,23 +272,22 @@ export default {
         alert("Please fill the form");
       } else {
         try {
-          const response = await axios.put(
-            `https://testapi.io/api/dartya/resource/cardata/${this.editCarId}`,
-            this.form
-          );
-
-          this.getData();
-
-          this.closeModal();
+          this.loading = true;
+          const response = await this.updateCarData(this.editCarId, this.form);
+          if (response) {
+            this.getData();
+            this.closeModalForm();
+            this.loading = false;
+          }
         } catch (error) {
-          store.loading = false;
-          store.isError = true;
-          store.error = error.response.status + " " + error.response.statusText;
+          this.loading = false;
+          this.isError = true;
+          this.error = error.response.status + " " + error.response.statusText;
         }
       }
     },
-    closeModal() {
-      this.$emit("close-modal");
+    closeModalForm() {
+      this.closeModal();
 
       this.form.name = "";
       this.form.details = "";
@@ -294,10 +305,7 @@ export default {
         alert("Please fill the form");
       } else {
         try {
-          const response = await axios.post(
-            "https://testapi.io/api/dartya/resource/cardata",
-            this.form
-          );
+          const response = await this.addCarData(this.form);
 
           if (response.status === 201) {
             this.$emit("close-modal");
@@ -321,26 +329,10 @@ export default {
             this.getData();
           }
         } catch (error) {
-          store.loading = false;
-          store.isError = true;
-          store.error = error.response.status + " " + error.response.statusText;
+          this.loading = false;
+          this.isError = true;
+          this.error = error.response.status + " " + error.response.statusText;
         }
-      }
-    },
-    async getData() {
-      store.loading = true;
-      try {
-        const response = await axios.get(
-          "https://testapi.io/api/dartya/resource/cardata"
-        );
-
-        this.cars = response.data.data;
-        store.loading = false;
-        store.isError = false;
-      } catch (error) {
-        store.loading = false;
-        store.isError = true;
-        store.error = error.response.status + " " + error.response.statusText;
       }
     },
     beforeEnter(el) {
