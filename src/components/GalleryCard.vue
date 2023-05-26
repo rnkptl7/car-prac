@@ -2,6 +2,13 @@
   <div v-show="loading" class="loader">
     <Loading />
   </div>
+  <div v-if="carsData.length == 0 && !isError">
+    <div class="empty-trash">
+      <img src="/images/NoDataFound.png" alt="Empty Trash" />
+      <h1>Car Data is not available!</h1>
+      <p>Add Your Favourite Car</p>
+    </div>
+  </div>
   <div v-show="!loading">
     <div v-show="isError" class="errorDiv">
       <Error />
@@ -170,7 +177,6 @@ export default {
   },
   emits: ["edit-item", "close-modal"],
   mounted() {
-    // this.getData();
     this.getData();
   },
   computed: {
@@ -325,7 +331,7 @@ export default {
               confirmButtonColor: "#082032",
             });
 
-            this.closeModal();
+            this.closeModalForm();
             this.getData();
           }
         } catch (error) {

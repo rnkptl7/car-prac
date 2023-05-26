@@ -1,15 +1,39 @@
 <template>
   <div id="navigation-mobile">
     <ul>
-      <li><router-link to="/">Home</router-link></li>
-      <li><router-link to="/login">Login</router-link></li>
-      <li><router-link to="/register">Register</router-link></li>
+      <div v-if="isLoggedIn">
+        <li>
+          <router-link to="/">Home</router-link>
+        </li>
+        <button class="btn" @click="logoutBtn">Logout</button>
+      </div>
+      <div v-else>
+        <li>
+          <router-link to="/login">Login</router-link>
+        </li>
+        <li>
+          <router-link to="/register">Register</router-link>
+        </li>
+      </div>
     </ul>
   </div>
 </template>
 
 <script>
-export default {};
+import { mapActions, mapState } from "pinia";
+import { useUserStore } from "../stores/userStore";
+export default {
+  methods: {
+    ...mapActions(useUserStore, ["logout"]),
+  },
+  computed: {
+    ...mapState(useUserStore, ["isLoggedIn"]),
+    logoutBtn() {
+      this.logout();
+      this.$router.push({ name: "Login" });
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -22,7 +46,7 @@ export default {};
     padding-left: 6rem;
 
     li {
-      margin: 1rem 0;
+      margin: 1rem 1rem;
       a {
         color: #fff;
         font-size: 1.4rem;

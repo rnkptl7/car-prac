@@ -102,10 +102,10 @@
 </template>
 
 <script>
-import axios from "axios";
 import { ErrorMessage } from "vee-validate";
+import { mapActions, mapWritableState } from "pinia";
+import { useUserStore } from "../stores/userStore";
 import { useCarStore } from "../stores/CarStore";
-import { mapActions } from "pinia";
 
 export default {
   components: {
@@ -135,8 +135,11 @@ export default {
       },
     };
   },
+  computed: {
+    ...mapWritableState(useCarStore, ["loading"]),
+  },
   methods: {
-    ...mapActions(useCarStore, ["addUser"]),
+    ...mapActions(useUserStore, ["addUser"]),
     addAge(e) {
       let date = new Date(e.target.value);
       let month_diff = Date.now() - date.getTime();
@@ -148,6 +151,7 @@ export default {
     },
     async registerData() {
       try {
+        this.loading = true;
         let response = await this.addUser(this.form);
 
         if (response.status === 201) {
@@ -155,9 +159,11 @@ export default {
             position: "top-right",
             duration: 3000,
           });
-          this.$router.push("/");
+          this.loading = false;
+          this.$router.push({ name: "Login" });
         }
       } catch (error) {
+        this.loading = false;
         alert("User Not Register Successfully!");
       }
     },
