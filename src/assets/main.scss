@@ -273,6 +273,30 @@ button:disabled:hover {
   cursor: not-allowed;
 }
 
+// empty-trash
+.empty-trash{
+  height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+
+  img{
+    width: 50rem;
+  }
+  h1{
+    font-size: 1.7rem;
+    margin-top: 2rem;
+    letter-spacing: 0.1rem;
+  }
+  p{
+    font-size: 1.2rem;
+    letter-spacing: 0.09rem;
+    margin-top: 0.5rem;
+  }
+}
+
 @media only screen and (min-width: 630px) and (max-width: 1300px) {
   .card-container {
     padding: 0.8rem 2rem;
@@ -289,4 +313,34 @@ button:disabled:hover {
       padding: 2rem;
     }
   }
+}
+
+@media (max-width: 930px) {
+  .empty-trash {
+  img {
+    width: 100%;
+  }
+}
+}
+
+@media (max-width: 480px) {
+  .empty-trash {
+  h1{
+    font-size: 1.4rem;
+  }
+  p{
+    font-size: 1rem;
+  }
+}
+}
+
+@media (max-width: 340px) {
+  .card-container{
+    padding: 4px;
+  }
+  .empty-trash {
+  h1{
+    font-size: 1.2rem;
+  }
+}
 }

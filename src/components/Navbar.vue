@@ -1,15 +1,20 @@
 <template>
   <div class="navbar">
-    <router-link to="/">
+    <router-link :to="{ name: 'Home' }">
       <div class="navbar-logo">
         <img class="logo" src="/images/logo.png" alt="apnicar logo" />
         <p>apniCar</p>
       </div>
     </router-link>
     <div class="navbar-right" v-show="!mobileView">
-      <router-link to="/">Home</router-link>
-      <router-link to="/login">Login</router-link>
-      <router-link to="/register">Register</router-link>
+      <div v-if="isLoggedIn">
+        <router-link :to="{ name: 'Home' }">Home</router-link>
+        <button class="btn" @click="logoutBtn">Logout</button>
+      </div>
+      <div v-else>
+        <router-link :to="{ name: 'Login' }">Login</router-link>
+        <router-link :to="{ name: 'Register' }">Register</router-link>
+      </div>
     </div>
     <div v-show="mobileView">
       <img
@@ -36,7 +41,8 @@
 <script>
 import NavigationMobile from "@/components/NavigationMobile.vue";
 import { useCarStore } from "../stores/CarStore";
-import { mapActions, mapWritableState } from "pinia";
+import { useUserStore } from "../stores/userStore";
+import { mapActions, mapState, mapWritableState } from "pinia";
 
 export default {
   components: {
@@ -44,9 +50,15 @@ export default {
   },
   computed: {
     ...mapWritableState(useCarStore, ["mobileView", "showNav"]),
+    ...mapState(useUserStore, ["isLoggedIn"]),
+    logoutBtn() {
+      this.logout();
+      this.$router.push({ name: "Login" });
+    },
   },
   methods: {
     ...mapActions(useCarStore, ["handleView", "closeMobileMenu"]),
+    ...mapActions(useUserStore, ["logout"]),
   },
   created() {
     this.handleView();

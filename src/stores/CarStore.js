@@ -72,14 +72,14 @@ export const useCarStore = defineStore("carStore", {
     addCarData(formData) {
       return axios.post(this.url, formData);
     },
-    loginUser(formData) {
-      return axios.post("https://testapi.io/api/dartya//login", formData);
-    },
-    addUser(formData) {
-      return axios.post(
-        "https://testapi.io/api/dartya/resource/users",
-        formData
-      );
-    },
+    // loginUser(formData) {
+    //   return axios.post("https://testapi.io/api/dartya//login", formData);
+    // },
+    // addUser(formData) {
+    //   return axios.post(
+    //     "https://testapi.io/api/dartya/resource/users",
+    //     formData
+    //   );
+    // },
   },
 });

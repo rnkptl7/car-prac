@@ -34,10 +34,10 @@
 </template>
 
 <script>
-import axios from "axios";
 import { ErrorMessage } from "vee-validate";
+import { useUserStore } from "../stores/userStore";
 import { useCarStore } from "../stores/CarStore";
-import { mapActions } from "pinia";
+import { mapActions, mapWritableState } from "pinia";
 
 export default {
   components: {
@@ -56,20 +56,42 @@ export default {
       },
     };
   },
+  computed: {
+    ...mapWritableState(useCarStore, ["loading"]),
+  },
   methods: {
-    ...mapActions(useCarStore, ["loginUser"]),
+    ...mapActions(useUserStore, ["loginUser", "getUsers"]),
     async submitForm() {
       try {
-        const response = await this.loginUser(this.form);
+        this.loading = true;
+        // const response = await this.loginUser(this.form);
 
-        if (response.status === 200) {
+        const response = await this.getUsers();
+        const users = response.data.data;
+
+        const isAvailable = users.find(
+          (user) =>
+            user.email === this.form.email &&
+            user.password === this.form.password
+        );
+
+        // console.log(isAvailable);
+        if (isAvailable) {
           this.$toast.success("Login successfully", {
             position: "top-right",
             duration: 3000,
           });
-          this.$router.push("/");
+          let token = Math.random().toString(36).substr(2);
+          sessionStorage.setItem("isLoggedIn", true);
+          sessionStorage.setItem("token", token);
+          this.loading = false;
+          this.$router.replace({ name: "Home" });
+        } else {
+          this.loading = false;
+          throw new Error("Incorrect email or password");
         }
       } catch (error) {
+        this.loading = false;
         alert("Incorrect email or password!");
       }
     },

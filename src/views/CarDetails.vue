@@ -90,7 +90,6 @@ export default {
       } catch (error) {
         this.loading = false;
         this.isError = true;
-        console.log(error);
         this.error = error.response.status + " " + error.response.statusText;
       }
     },
@@ -229,7 +228,7 @@ export default {
       flex-direction: column;
 
       .carDesc {
-        width: 100%;
+        width: 90%;
       }
       .carImage {
         width: 100%;
