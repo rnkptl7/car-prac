@@ -12,7 +12,6 @@
 
 <style lang="scss" scoped>
 .notFound {
-  //   background: red;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -13,7 +13,8 @@ export const useCarStore = defineStore("carStore", {
     error: "",
     car: [],
     moreCarsData: [],
-    url: "https://testapi.io/api/dartya/resource/cardata",
+    // url: "https://testapi.io/api/dartya/resource/cardata",
+    url: import.meta.env.VITE_PROD_CARDATA_URL,
   }),
   getters: {
     getCarById: (state) => (id) => {

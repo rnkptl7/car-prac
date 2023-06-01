@@ -4,19 +4,17 @@ import { defineStore } from "pinia";
 export const useUserStore = defineStore("userStore", {
   state: () => ({
     isLoggedIn: sessionStorage.getItem("isLoggedIn"),
+    userApi: import.meta.env.VITE_PROD_USER_API,
   }),
   actions: {
     loginUser(formData) {
-      return axios.post("https://testapi.io/api/dartya//login", formData);
+      return axios.post(`${this.userApi}//login`, formData);
     },
     addUser(formData) {
-      return axios.post(
-        "https://testapi.io/api/dartya/resource/users",
-        formData
-      );
+      return axios.post(`${this.userApi}/resource/users`, formData);
     },
     getUsers() {
-      return axios.get("https://testapi.io/api/dartya/resource/users");
+      return axios.get(`${this.userApi}/resource/users`);
     },
     isAuthenticated() {
       const loggedIn = JSON.parse(sessionStorage.getItem("isLoggedIn"));

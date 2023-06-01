@@ -9,16 +9,16 @@
       <p>Add Your Favourite Car</p>
     </div>
   </div>
-  <div v-show="!loading">
+  <div v-if="!loading">
     <div v-show="isError" class="errorDiv">
       <Error />
     </div>
     <TransitionGroup
       tag="div"
+      appear
       @before-enter="beforeEnter"
       @enter="enter"
       name="card"
-      appear
       v-show="!isError"
       class="card-container"
     >
@@ -364,6 +364,7 @@ export default {
   transition: all 0.8s ease;
   animation: move 0.8s ease-out;
 }
+
 .card-leave-to {
   opacity: 0;
 }
